@@ -1,0 +1,68 @@
+## R Markdown
+
+#LIBRERIAS UTILIZADAS
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(kableExtra)
+library(survival)
+library(survminer)
+```
+
+#VER LOS DATOS DEL DATASET
+```{r}
+data <- lung 
+head(data) %>% kable(format = "pandoc", caption = paste("Supervivencia en pacientes con cáncer avanzado de pulmón"))
+```
+
+#CALCULAR LA PROBABILIDAD DE SUPERVIVENCIA POR GENERO
+```{r}
+fit <- surv_fit(Surv(time, status)~ sex, data, type = "kaplan-meier")
+df <- data.frame(tiempo = fit$time, n.risk = fit$n.risk, n.event = fit$n.event, n.censor = fit$n.censor, surv = fit$surv, upper =fit$upper, lower = fit$lower)
+head(df) %>% kable(format = "pandoc", caption = paste("Probabilidad de supervivencia por genero"))
+```
+
+# CURVA DE SUPERVIVENCIA
+```{r}
+ggsurvplot(fit, data, pval = TRUE, conf.int = TRUE, risk.table = TRUE, risk.table.col = "strata", linetype = "strata", surv.median.line = "hv", ggtheme = theme_bw(), palette = c("#E7B800", "#2E9FDF"))
+```
+
+#RESUMEN DE LA CURVA DE SUPERVIVENCIA
+```{r}
+summary(fit)$table
+```
+
+#PRUEBA DE HIPOTESIS PARA COMPARAR 2 O MAS FUNCIONES DE SUPERVIVENCIA
+```{r}
+surv_diff <- survdiff(Surv(time, status)~ sex, data)
+surv_diff
+```
+
+#MODELO DE RIESGOS PROPORCIONALES DE COX
+```{r}
+res.cox <- coxph(Surv(time, status)~sex, data)
+summary(res.cox)
+```
+
+#REGRESIÓN DE COX MULTIVARIABLE 
+```{r}
+res.cox <- coxph(Surv(time, status)~age + sex + ph.ecog + ph.karno + wt.loss, data)
+summary(res.cox)
+```
+
+#VALIDACIÓN DE SUPUESTOS ((SE TENDRIA QUE HABER HECHO AL PRINCIPIO))
+```{r}
+res.cox <- coxph(Surv(time, status)~age + sex + wt.loss, data)
+test.ph <- (cox.zph(res.cox))
+test.ph
+```
+
+#GRÁFICO DE LA VALIDACIÓN DE SUPUESTOS
+```{r}
+ggcoxzph(test.ph)
+```
+
+#TESTEAR OBSERVACIONES INFLUYENTES
+```{r}
+ggcoxdiagnostics(res.cox, type = "deviance", linear.predictions = FALSE, ggtheme = theme_bw())
+```
