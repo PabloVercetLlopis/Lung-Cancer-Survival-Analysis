@@ -1,0 +1,154 @@
+---
+title: "Untitled"
+author: "Pablo Vercet"
+date: "2023-12-02"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(kableExtra)
+library(survival)
+library(survminer)
+```
+
+La actividad consiste en escoger sólo 1 de los siguientes datasets, realizar un ANÁLISIS DE SUPERVIVENCIA y comentar los resultados.
+
+data(melanom), library(ISwR) # contiene la base de datos
+data(lung), library(survival), library(survminer)
+
+```{r}
+data <- lung 
+head(data) %>% kable(format = "pandoc", caption = paste("Supervivencia en pacientes con cáncer avanzado de pulmón"))
+```
+
+#calcular la probabilidad de supervivencia por genero
+```{r}
+fit <- surv_fit(Surv(time, status)~ sex, data, type = "kaplan-meier")
+df <- data.frame(tiempo = fit$time, n.risk = fit$n.risk, n.event = fit$n.event, n.censor = fit$n.censor, surv = fit$surv, upper =fit$upper, lower = fit$lower)
+head(df) %>% kable(format = "pandoc", caption = paste("Probabilidad de supervivencia por genero"))
+```
+
+```{r}
+ggsurvplot(fit, data, pval = TRUE, conf.int = TRUE, risk.table = TRUE, risk.table.col = "strata", linetype = "strata", surv.median.line = "hv", ggtheme = theme_bw(), palette = c("#E7B800", "#2E9FDF"))
+```
+
+```{r}
+summary(fit)$table
+```
+
+En estos **RESULTADOS** vemos que la mediana (0.5) de supervivencia para varones es de 270 días, mientras que para mujeres es de 426 días.
+Todo indica que hay una diferencia significativa pero se debe realizar un es test estadístico para comprobarlo. 
+
+#PRUEBA DE HIPOTESIS PARA COMPARAR 2 O MAS FUNCIONES DE SUPERVIVENCIA
+```{r}
+surv_diff <- survdiff(Surv(time, status)~ sex, data)
+surv_diff
+```
+
+***Resultados***: vemos que el p-valor<0.05, por lo que se concluye que la supervivencia difere significativamente por género. 
+
+#MODELO DE RIESGOS PROPORCIONALES DE COX
+
+```{r}
+res.cox <- coxph(Surv(time, status)~sex, data)
+summary(res.cox)
+```
+
+***RESULTADOS***: se observa que los p-valores de los resultados generales (likehood, waldtest, score) son menores de 0.05, por lo que concluimos que el modelo si es significativo.
+la variable sexo tiene un coeficiente significativamente distinto de 0.
+
+#Como usar una función para obtener los parámetros que nos interesan
+```{r}
+covariates <- c("age", "sex", "ph.karno", "ph.ecog", "wt.loss")
+univ_formulas <- sapply(covariates, function(x) as.formula(paste('Surv(time, status)~',x)))
+univ_models <- lapply(univ_formulas, function(x){coxph(x,data)})
+
+#extraer datos
+univ_results <- lapply(univ_models, 
+                       function(x){
+                      x = summary(x)
+                      p.value = signif(x$wald["p.value"], digits = 2)
+                      wald.test = signif(x$wald["test"], digits = 2)
+                      beta = signif(x$coef[1], digits = 2)
+                      HR = signif(x$coef[2], digits = 2)
+                      HR.confint.lower = signif(x$conf.int[,"lower .95"], digits = 2)
+                      HR.confint.upper = signif(x$conf.int[, "upper .95"], digits = 2)
+                      HR = paste0(HR,"(",HR.confint.lower,"-", HR.confint.upper,")")
+                      res = c(beta, HR, wald.test, p.value)
+                      names(res) = c("Beta", "HR(95% CI for HR)", "Wald Test", "p.value")
+                      return(res)
+                       }
+                         )
+```
+
+```{r}
+res <- t(as.data.frame(univ_results, check.names = FALSE))
+as.data.frame(res)
+```
+
+***RESULTADOS***: Age y ph.ecog tienen coeficientes Beta positivos
+                  Sex y ph.karno tienen coeficientes Beta negativos. 
+                  Edad avanzada y ph.ecog alto tienen baja supervivencia
+                  Ser mujer significa tener una alta supervivencia.
+
+#Regresión de COX multivariable (sin la funcion anterior)
+```{r}
+res.cox <- coxph(Surv(time, status)~age + sex + ph.ecog, data)
+summary(res.cox)
+```
+
+***RESULTADOS***: los resultados generales (p.valor<0.05) muestran que el modelo es significativo. 
+                  Sex y ph.ecog son estadisticamente significativas 
+                  age al tener un pvalor >0.05 no es significativa. 
+                  HR de sex con 0.58 y p-valor<0.05 muestra una fuerte relacion entre la variable y el decrecimiento de muerte
+                  HR de ph.ecog con 1.58 y p-valor<0.05 muestra una fuerte relacion entre la variable y el incremento de muerte
+                  HR de age con 1.01 y p.valor>0.05 muestra que no hay relacion entre la variable y el riesgo de muerte
+
+#Validacion de supuestos ((SE TENDRIA QUE HABER HECHO AL PRINCIPIO))
+```{r}
+res.cox <- coxph(Surv(time, status)~age + sex + wt.loss, data)
+test.ph <- (cox.zph(res.cox))
+test.ph
+```
+
+***RESULTADOS***: Vemos que todos los p-valores son >0.05 por lo que la prueba no es estadisticamente signifcativa para las covariables ni como para el modelo global. Por lo tanto, se pueden asumir los riesgos proporcionales. Hemos hecho bien al utilizar Cox.
+
+```{r}
+ggcoxzph(test.ph)
+```
+
+#Testear observaciones influyentes
+```{r}
+ggcoxdiagnostics(res.cox, type = "deviance", linear.predictions = FALSE, ggtheme = theme_bw())
+```
+
+***RESULTADOS***: valores positivos corresponden a pacientes que mueren pronto comparado con el tiempo de supervivencia estimado
+                  valores negativos corresponden a pacientes que viven mucho comparado con el tiempo de supervivencia estimado
+                  los valores lejanos del 0 son outliers, que dificultan la prediccion del modelo. 
