@@ -65,4 +65,5 @@ El análisis confirma que el género y el ph.ecog son factores significativos en
 🖊️ Autor:
 
 Pablo Vercet
+
 Proyecto desarrollado como parte de un análisis de supervivencia en RStudio.
