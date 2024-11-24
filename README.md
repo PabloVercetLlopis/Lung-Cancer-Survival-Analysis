@@ -19,11 +19,6 @@ Asegúrate de tener R y estas bibliotecas instaladas antes de ejecutar los scrip
 
 ``` {r}
 Lung-Cancer-Survival-Analysis/
-├── VERCET_LLOPIS_ACTIVIDAD_13.Rmd # Archivo R Markdown con el análisis
-├── datos/                          
-│   ├── lung_cancer_examples.csv   # Dataset utilizado
-├── README.md                      # Este archivo
-├── Codigo fuente                  # Codigo utilizado en este proyecto
 ├── Results/                       # Gráficos generados durante el análisis
 │   ├── README.MD                                 # Explicaciones de los resultados
 │   ├── Regresion de cox multivariable.PNG        # Regresion del modelo de Cox
@@ -32,6 +27,12 @@ Lung-Cancer-Survival-Analysis/
 │   ├── grafica observaciones influyentes.PNG     # Gráficos de observaciones influyentes
 │   ├── prueba de hipotesis.PNG                   # Prueba de hipotesis para comparar 2 o más funciones de supervivencia
 │   ├── validacion de supuestos grafica.PNG       # Gráfico de la validacion de supuestos
+├── datos/                          
+│   ├── lung_cancer_examples.csv   # Dataset utilizado
+├── Análisis-en-Rstudio            # Archivo R Markdown con el análisis
+├── Codigo fuente                  # Codigo utilizado en este proyecto
+├── README.md                      # Este archivo
+
 
 
 
