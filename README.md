@@ -19,15 +19,22 @@ Asegúrate de tener R y estas bibliotecas instaladas antes de ejecutar los scrip
 
 ``` {r}
 Lung-Cancer-Survival-Analysis/
-├── analysis.Rmd                   # Archivo R Markdown con el análisis
-├── lung_cancer_dataset.RData      # Dataset utilizado (incluido en R)
-├── plots/                         # Gráficos generados durante el análisis
-│   ├── survival_curves.png        # Curvas de supervivencia de Kaplan-Meier
-│   ├── cox_diagnostics.png        # Gráficos de diagnóstico del modelo de Cox
+├── VERCET_LLOPIS_ACTIVIDAD_13.Rmd # Archivo R Markdown con el análisis
+├── datos/                          
+│   ├── lung_cancer_examples.csv   # Dataset utilizado
 ├── README.md                      # Este archivo
-├── results/                       # Resultados estadísticos
-│   ├── summary_statistics.txt     # Estadísticas descriptivas
-│   ├── cox_model_summary.txt      # Resumen del modelo de Cox
+├── Codigo fuente                  # Codigo utilizado en este proyecto
+├── Results/                       # Gráficos generados durante el análisis
+│   ├── README.MD                                 # Explicaciones de los resultados
+│   ├── Regresion de cox multivariable.PNG        # Regresion del modelo de Cox
+│   ├── Validacion de supuestos.PNG               # Datos de la validacion de supuestos
+│   ├── curva de supervivencia por generos.PNG    # Curva de supervivencia con ambos generos
+│   ├── grafica observaciones influyentes.PNG     # Gráficos de observaciones influyentes
+│   ├── prueba de hipotesis.PNG                   # Prueba de hipotesis para comparar 2 o más funciones de supervivencia
+│   ├── validacion de supuestos grafica.PNG       # Gráfico de la validacion de supuestos
+
+
+
 ```
 
 🚀 Pasos para Reproducir el Análisis:
