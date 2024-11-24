@@ -4,7 +4,7 @@ Este directorio contiene las visualizaciones y resultados generados en el análi
 
 ## Contenido
 - `curva de supervivencia por genero.PNG`: Gráfico de curvas de Kaplan-Meier, mostrando la probabilidad de supervivencia por género, siendo sex1= Hombres y sex2= Mujeres.
-- prueba de hipotesis para comparar 2 o + funciones de supervivencia.PNG: Es una prueba de hipótesis donde se observa que el p-valor<0.05, por lo que se concluye que la supervivencia difere significativamente por género. 
+- `prueba de hipotesis para comparar 2 o + funciones de supervivencia.PNG`: Es una prueba de hipótesis donde se observa que el p-valor<0.05, por lo que se concluye que la supervivencia difere significativamente por género. 
 - `Regresion de cox multivariable.PNG`: Muestra que los resultados generales (p.valor<0.05), por lo que el modelo es significativo. 
       Sex y ph.ecog son estadisticamente significativas 
       Age al tener un pvalor >0.05 no es significativa. 
