@@ -9,10 +9,15 @@ Este proyecto se centra en realizar un análisis de supervivencia utilizando el 
 El análisis fue desarrollado en RStudio utilizando las siguientes bibliotecas:
 
 tidyverse
+
 ggplot2
+
 kableExtra
+
 survival
+
 survminer
+
 Asegúrate de tener R y estas bibliotecas instaladas antes de ejecutar los scripts.
 
 📂 Estructura del Proyecto:
@@ -33,37 +38,52 @@ Lung-Cancer-Survival-Analysis/
 ├── Codigo fuente                  # Codigo utilizado en este proyecto
 ├── README.md                      # Este archivo
 
-
-
-
 ```
 
 🚀 Pasos para Reproducir el Análisis:
 
-Cargar el proyecto en RStudio: Abre el archivo analysis.Rmd.
-Ejecutar los chunks de código: Sigue las secciones para reproducir las curvas de supervivencia, las pruebas estadísticas y los modelos de Cox.
-Revisar los resultados:
-Los gráficos generados se guardan en la carpeta plots/.
-Las estadísticas resumidas se encuentran en la carpeta results/.
+Cargar el proyecto en RStudio
+
+Ejecutar los chunks de código
+
+Revisar los resultados
+
+Los gráficos y estadísticas generados se guardan en la carpeta Results/.
 
 🧪 Metodología:
 
-Análisis Realizado:
-Exploración de datos:
+Análisis Realizado
+
+Exploración de datos
+
 Resumen descriptivo de las variables relevantes en el dataset.
-Curvas de Kaplan-Meier:
+
+Curvas de Kaplan-Meier
+
 Estimación de supervivencia estratificada por género.
+
 Análisis de diferencias con pruebas de hipótesis.
-Modelos de Cox:
+
+Modelos de Cox
+
 Análisis univariado para evaluar el impacto de diferentes covariables.
+
 Modelo multivariable ajustado con validación de supuestos.
-Validación:
+
+Validación
+
 Comprobación de riesgos proporcionales y diagnóstico del modelo.
+
 Principales Resultados:
+
 La mediana de supervivencia es significativamente mayor en mujeres (426 días) que en hombres (270 días).
+
 Los resultados de los modelos de Cox muestran que:
+
 Ser mujer está asociado con un menor riesgo de muerte (HR = 0.58, p < 0.05).
+
 Un mayor ph.ecog incrementa significativamente el riesgo de muerte (HR = 1.58, p < 0.05).
+
 La edad no es significativa en el modelo multivariable (p > 0.05).
 
 📈 Conclusiones:
